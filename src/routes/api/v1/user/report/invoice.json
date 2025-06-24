@@ -1,0 +1,19 @@
+[
+	"#set page(width: 210mm, height: 297mm, margin: 2cm)\r\n\r\n#rect[\r\n  #set text(12pt)\r\n  #grid(\r\n    columns: (1fr, 1fr),\r\n    gutter: 1cm,\r\n    [\r\n      #strong[Open WebUI Metering]\\\r\n    ],\r\n    [\r\n      #align(right, text(size: 24pt, weight: \"bold\")[COST REPORT])\\\r\n      #set par(justify: true)\r\n      Date: #datetime.today().display()\\\r\n    ]\r\n  )\r\n]\r\nCosts are calculated through IEEE floating point numbers. Slight imprecisions are to be expected.\r\n\r\n\/\/ Separator\r\n#line(length: 100%, stroke: 0.5pt)\r\n\r\n\/\/ Billing Information\r\n#v(1cm)\r\n#set text(10pt)\r\n#grid(\r\n  columns: (1fr, 1fr),\r\n  column-gutter: 1cm,\r\n  [\r\n    #strong[Costs of:]\\\r\n    UserID: #strong[",
+	"USERID",
+	"]\\\r\n    Username: #strong[",
+	"USERNAME",
+	"]\\\r\n    Email: #strong[",
+	"EMAIL",
+	"]\r\n  ],\r\n  [\r\n    #align(right)[\r\n      #strong[Service Period:]\\\r\n      ",
+	"MONTH",
+	", ",
+	"YEAR",
+	"\r\n    ]\r\n  ]\r\n)\r\n#set table(\r\n  stroke: none,\r\n  gutter: 0.2em,\r\n  fill: (x, y) =>\r\n    if y == 0 { blue } else {silver},\r\n  inset: (right: 1.5em),\r\n)\r\n#show table.cell: it => {\r\n  if it.y == 0 {\r\n    set text(white)\r\n    strong(it)\r\n  } else if it.body == [] {\r\n    \/\/ Replace empty cells with 'N\/A'\r\n    pad(..it.inset)[_N\/A_]\r\n  } else {\r\n    it\r\n  }\r\n}\r\n\r\n\/\/ Main Content\r\n#v(1cm)\r\n#table(\r\n  columns: (3fr, 1.5fr, 1.5fr, 2fr),\r\n  align: horizon,\r\n  table.header([Model], [Tokens Used], [Cost per Token], [Total]),\r\n  ",
+	"TABLECONTENT",
+	"\r\n)\r\n\r\n\/\/ Total Section\r\n#v(1cm)\r\n#set align(right)\r\n#set text(12pt)\r\n#rect(\r\n    inset: 8pt,\r\n    fill: rgb(\"f8f8f8\"),\r\n    radius: 4pt,\r\n    [\r\n      Total Amount Due: #strong[\\$",
+	"AMOUNT",
+	"]\r\n    ]\r\n)\r\n#set align(left)\r\n\r\n\r\n\/\/ Footer\r\n#v(1.5cm)\r\n#set text(8pt)\r\n#align(center)[\r\n",
+	"FOOTER",
+	"\r\n]\r\n"
+]
