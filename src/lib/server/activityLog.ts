@@ -77,7 +77,7 @@ export function buildActivityTableData(activity: Activity): {
       new Date(activity.activity.timestamp * 1000),
       activity.activity.model,
       makeTokenString(activity.activity),
-      activity.user?.id + '|' + activity.user?.name,
+      activity.activity.user_id + '|' + (activity.user?.name ?? ''),
       activity.activity.cost
     ];
   });

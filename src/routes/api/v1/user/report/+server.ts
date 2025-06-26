@@ -5,6 +5,7 @@ import { db } from '$lib/server/db';
 import { usersTable } from '$lib/server/db/schema';
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
+import * as z from 'zod/v4';
 
 import { spawn } from 'node:child_process';
 async function spawnBuffered(
@@ -38,17 +39,28 @@ async function spawnBuffered(
 const MINIMUM_CHARGE_FEE = parseFloat(process.env.MINIMUM_CHARGE_FEE ?? '0');
 
 export const POST: RequestHandler = async ({ request }) => {
-  let { userId, year, month } = await request.json();
+  let requestBody;
+  try {
+    let ReportRequest = z.object({
+      userId: z.string(),
+      year: z.int(),
+      month: z.int()
+    });
+    requestBody = ReportRequest.parse(await request.json());
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return json(
+        { success: false, message: 'Invalid request body', issues: error.issues },
+        { status: 400 }
+      );
+    }
+    return json({ success: false, message: 'Internal server error' }, { status: 500 });
+  }
+  let { userId, year, month } = requestBody;
   const data = await db.select().from(usersTable).where(eq(usersTable.id, userId));
   const user = data[0] ?? null;
   if (user === null) {
     return json({ success: false, message: 'User not found' }, { status: 404 });
-  }
-  if (!userId || [year, month].includes(NaN)) {
-    return json(
-      { success: false, message: 'UserId, year or month is missing or wrong' },
-      { status: 400 }
-    );
   }
 
   const { start, end } = getTimeBoundariesForMonth(year, month);
@@ -63,6 +75,8 @@ export const POST: RequestHandler = async ({ request }) => {
   ).toFixed(2);
   const footer =
     'Please pay the costs quickly. I appreciate it very much! The additional total cost due comes from running the chat service.';
+  // Yes this is ugly, if you have a better idea let me know!
+  // typst.ts produces segmentation fault on npm run build
   const { stdout } = await spawnBuffered('typst', [
     'compile',
     '--input',

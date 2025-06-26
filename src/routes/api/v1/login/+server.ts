@@ -3,16 +3,15 @@ import type { RequestHandler } from './$types';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
+import * as z from 'zod/v4';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
   try {
-    const { password } = await request.json();
-
     // 1. Validate password
-    if (!password) {
-      console.warn('Login attempt failed because of malformed request');
-      return json({ error: 'Password is required' }, { status: 400 });
-    }
+    const Login = z.object({
+      password: z.string().min(1)
+    });
+    const { password } = Login.parse(await request.json());
 
     if (!process.env.PASSWORD_HASH) {
       console.error("Login isn't possible because PASSWORD_HASH is not set!");
@@ -23,8 +22,8 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     try {
       isValidPassword = await argon2.verify(process.env.PASSWORD_HASH!, password);
     } catch {
-      console.error("Login isn't possible because PASSWORD_HASH is not set!");
-      return json({ error: 'Login is misconfigured configured' }, { status: 500 });
+      console.error("Login isn't possible because PASSWORD_HASH is not set in the correct format!");
+      return json({ error: 'Login is misconfigured' }, { status: 500 });
     }
 
     if (!isValidPassword) {
@@ -54,7 +53,11 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
       message: 'Authentication successful'
     });
   } catch (error) {
-    console.warn('Login attempt failed because of malformed request', error);
-    return json({ error: 'Invalid request' }, { status: 400 });
+    if (error instanceof z.ZodError) {
+      console.warn('Login attempt failed because of malformed request', error.issues);
+      return json({ error: 'Invalid request', issues: error.issues }, { status: 400 });
+    }
+    console.warn('Unexpected error occured', error);
+    return json({ error: 'Internal server error' }, { status: 500 });
   }
 };

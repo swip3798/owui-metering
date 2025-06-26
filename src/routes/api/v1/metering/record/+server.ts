@@ -2,39 +2,29 @@ import type { RequestHandler } from './$types';
 import { activityTable, usersTable } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 import { json } from '@sveltejs/kit';
+import * as z from 'zod/v4';
 
 export const POST: RequestHandler = async ({ request }) => {
-  const meteringRecord: {
-    user: { name: string; email: string; role: string; id: string };
-    activity: {
-      id: string;
-      timestamp: number;
-      user_id: string;
-      model: string;
-      prompt_token: number;
-      completion_token: number;
-      reasoning_token?: number;
-      cost: number;
-      cached_tokens: number;
-    };
-  } = await request.json();
-  const user: typeof usersTable.$inferInsert = {
-    id: meteringRecord?.user?.id,
-    name: meteringRecord?.user?.name,
-    email: meteringRecord?.user?.email,
-    role: meteringRecord?.user?.role
-  };
-  await db.insert(usersTable).values(user).onConflictDoNothing();
+  const MeteringRecord = z.object({
+    user: z.object({ name: z.string(), email: z.string(), role: z.string(), id: z.string() }),
+    activity: z.object({
+      id: z.string(),
+      timestamp: z.int(),
+      user_id: z.string(),
+      model: z.string(),
+      prompt_token: z.int(),
+      completion_token: z.int(),
+      reasoning_token: z.nullish(z.int()),
+      cost: z.float64(),
+      cached_tokens: z.int()
+    })
+  });
+  const meteringRecord = MeteringRecord.parse(await request.json());
+  const user: typeof usersTable.$inferInsert = meteringRecord.user;
+  await db.insert(usersTable).values(user).onConflictDoUpdate({ target: usersTable.id, set: user });
   const activity: typeof activityTable.$inferInsert = {
-    id: meteringRecord?.activity?.id,
-    timestamp: meteringRecord?.activity?.timestamp,
-    user_id: meteringRecord?.activity?.user_id,
-    model: meteringRecord?.activity?.model,
-    prompt_token: meteringRecord?.activity?.prompt_token,
-    completion_token: meteringRecord?.activity?.completion_token,
-    reasoning_token: meteringRecord?.activity?.reasoning_token,
-    cost: meteringRecord?.activity?.cost ?? 0.0,
-    cached_tokens: meteringRecord?.activity?.cached_tokens
+    reasoning_token: meteringRecord.activity?.reasoning_token ?? null,
+    ...meteringRecord.activity
   };
   await db.insert(activityTable).values(activity).onConflictDoNothing();
   console.info(

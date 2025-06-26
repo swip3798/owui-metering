@@ -46,6 +46,7 @@
 		"file-saver": "^2.0.5",
 		"jsonwebtoken": "^9.0.2",
 		"jspdf": "^3.0.1",
-		"jspdf-autotable": "^5.0.2"
+		"jspdf-autotable": "^5.0.2",
+		"zod": "^3.25.67"
 	}
 }
