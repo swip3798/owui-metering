@@ -2,6 +2,8 @@ import { handler } from './build/handler.js';
 import express from 'express';
 import 'dotenv/config';
 
+const port = parseInt(process.env.PORT) || 3000;
+
 const checkOrLogEnvVar = (name, envVar, optional) => {
 	if (!envVar) {
 		if (!optional) {
@@ -19,15 +21,13 @@ const checkOrLogEnvVar = (name, envVar, optional) => {
 };
 
 const setupBackgroundTasks = () => {
+	console.info('Starting retention background task...');
 	const interval = setInterval(async () => {
 		try {
-			console.log('Running retention background task...');
-
-			const response = await handler(
-				new Request('http://localhost/retention/tick', {
-					method: 'POST'
-				})
-			);
+			const response = await fetch(`http://localhost:${port}/api/v1/retention/tick`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json', Authorization: process.env.API_KEY }
+			});
 
 			// Process response if needed
 			const result = await response.json();
@@ -35,7 +35,7 @@ const setupBackgroundTasks = () => {
 		} catch (err) {
 			console.error('Background task failed:', err);
 		}
-	}, 3600 * 12);
+	}, 10000);
 	// Clean up on server shutdown
 	process.on('SIGTERM', () => clearInterval(interval));
 	process.on('SIGINT', () => clearInterval(interval));
@@ -61,8 +61,6 @@ app.get('/healthcheck', (req, res) => {
 
 // let SvelteKit handle everything else, including serving prerendered pages and static assets
 app.use(handler);
-
-const port = parseInt(process.env.PORT) || 3000;
 
 if (process.env.pm_id === '0' || !process.env.pm_id) {
 	// Only run in the first PM2 process or when not using PM2
