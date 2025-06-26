@@ -36,6 +36,7 @@
 		<NavLi href="/models">Models</NavLi>
 		<NavLi href="/metering/activity">Activity</NavLi>
 		<NavLi href="/metering/report">Cost Report</NavLi>
+		<NavLi href="/admin">Administration</NavLi>
 	</NavUl>
 	<div class="flex flex-row gap-2">
 		<DarkMode class="text-primary-500 dark:text-primary-600 border dark:border-gray-800" />
