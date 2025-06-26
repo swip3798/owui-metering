@@ -14,7 +14,18 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
       return json({ error: 'Password is required' }, { status: 400 });
     }
 
-    const isValidPassword = await argon2.verify(process.env.PASSWORD_HASH!, password);
+    if (!process.env.PASSWORD_HASH) {
+      console.error("Login isn't possible because PASSWORD_HASH is not set!");
+      return json({ error: 'Login is not configured' }, { status: 500 });
+    }
+
+    let isValidPassword = false;
+    try {
+      isValidPassword = await argon2.verify(process.env.PASSWORD_HASH!, password);
+    } catch {
+      console.error("Login isn't possible because PASSWORD_HASH is not set!");
+      return json({ error: 'Login is misconfigured configured' }, { status: 500 });
+    }
 
     if (!isValidPassword) {
       console.warn('Login attempt failed because of wrong password');
@@ -43,7 +54,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
       message: 'Authentication successful'
     });
   } catch (error) {
-    console.warn('Login attempt failed because of malformed request');
-    return json({ error: 'Invalid request', error_type: error }, { status: 400 });
+    console.warn('Login attempt failed because of malformed request', error);
+    return json({ error: 'Invalid request' }, { status: 400 });
   }
 };

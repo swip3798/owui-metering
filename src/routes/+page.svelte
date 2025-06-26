@@ -16,6 +16,7 @@
 	import DataTable from '$lib/components/DataTable.svelte';
 	import { onMount } from 'svelte';
 	import type { ConfigColumns } from 'datatables.net-dt';
+	import { InfoCircleSolid } from 'flowbite-svelte-icons';
 
 	const { data }: PageProps = $props();
 	const transformChartData = async (
@@ -73,13 +74,18 @@
 			{#await data.credits}
 				<Spinner class="m-auto" />
 			{:then credits}
-				{#if credits != null}
+				{#if credits.provider != null}
 					<Heading tag="h2">
 						${(credits.total_credits - credits.total_usage).toFixed(3)}</Heading
 					><P>Current credits</P>
 				{:else}
-					<P>Current credits unavailable</P>
+					<P>Your set provider doesn't have a credits quota</P>
 				{/if}
+			{:catch}
+				<div class="flex flex-row gap-2">
+					<InfoCircleSolid />
+					<P>An error occured while loading available credits</P>
+				</div>
 			{/await}
 		</Card>
 		<Card class="w-full max-w-full p-4">
