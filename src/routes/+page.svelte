@@ -75,17 +75,21 @@
 				<Spinner class="m-auto" />
 			{:then credits}
 				{#if credits.provider != null}
-					<Heading tag="h2">
-						${(credits.total_credits - credits.total_usage).toFixed(3)}</Heading
-					><P>Current credits</P>
+					{#if credits.credits != null}
+						<Heading tag="h2">
+							${(credits.credits.total_credits - credits.credits.total_usage).toFixed(3)}</Heading
+						><P>Current credits</P>
+					{:else}
+						<div class="flex flex-row gap-2">
+							<span class="text-rose-600">
+								<InfoCircleSolid />
+							</span>
+							<P>An error occured while loading available credits</P>
+						</div>
+					{/if}
 				{:else}
-					<P>Your set provider doesn't have a credits quota</P>
+					<P>Your set provider doesn't have credits</P>
 				{/if}
-			{:catch}
-				<div class="flex flex-row gap-2">
-					<InfoCircleSolid />
-					<P>An error occured while loading available credits</P>
-				</div>
 			{/await}
 		</Card>
 		<Card class="w-full max-w-full p-4">

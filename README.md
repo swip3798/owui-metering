@@ -38,6 +38,11 @@ services:
     volumes:
       - ./open-metering:/app/data
     env_file: '.metering.env'
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://localhost:45000/healthcheck']
+      interval: 30s
+      timeout: 10s
+      retries: 10
 ```
 
 #### Option 2: Integrated in the same docker-compose with Open-WebUI
@@ -59,6 +64,11 @@ services:
     volumes:
       - ./open-metering:/app/data
     env_file: '.metering.env'
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://localhost:45000/healthcheck']
+      interval: 30s
+      timeout: 10s
+      retries: 10
 ```
 
 ### 2. Configure `.metering.env`
@@ -118,8 +128,17 @@ docker compose up -d
 
 **AGPL-V3** (GNU Affero General Public License v3.0).
 
-- **Important**: Derivative works or integrations must also be open-sourced under AGPL-V3.
+- **Important**:
+  - Derivative works or integrations must also be open-sourced under AGPL-V3.
+  - If you host a changed version of OWUI-Metering, you also have to make a version of that source code easily available to the user.
+  - AGPL-V3 also applies to the Filter Plugin!
 - [Full license text](https://www.gnu.org/licenses/agpl-3.0.en.html).
+
+## Data privacy and GDPR
+
+You as the admin are responsible to ensure that you follow the data privacy laws of your country (e.g. the GDPR). This might include informing your users what data is logged when the use your Open-WebUI. OWUI-Metering collects no texts, however, because of how Open-WebUI works, it collect the model-id used in Open-WebUI, not the model-id of OpenRouter. This might be a privacy concern, please inform your users about that!
+
+I am working on getting data retention and user deletion into OWUI-Metering to ensure you can comply to laws in that regard ASAP.
 
 ## 🤝 Contributions Welcome!
 

@@ -1,8 +1,7 @@
 """
 title: Openrouter-Metering
 author: swip3798
-author_url: https://github.com/open-webui
-funding_url: https://github.com/open-webui
+author_url: https://github.com/swip3798
 requirements: httpx
 version: 0.1
 """
