@@ -16,7 +16,7 @@ export const POST: RequestHandler = async ({ request }) => {
       completion_token: z.int(),
       reasoning_token: z.nullish(z.int()),
       cost: z.float64(),
-      cached_tokens: z.int()
+      cached_tokens: z.nullish(z.int())
     })
   });
   const meteringRecord = MeteringRecord.parse(await request.json());
