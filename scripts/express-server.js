@@ -35,7 +35,7 @@ const setupBackgroundTasks = () => {
 		} catch (err) {
 			console.error('Background task failed:', err);
 		}
-	}, 10000);
+	}, 3600000 * 12);
 	// Clean up on server shutdown
 	process.on('SIGTERM', () => clearInterval(interval));
 	process.on('SIGINT', () => clearInterval(interval));
@@ -67,4 +67,4 @@ if (process.env.pm_id === '0' || !process.env.pm_id) {
 	setupBackgroundTasks();
 }
 
-app.listen(port, (error) => {});
+app.listen(port, (error) => { });
