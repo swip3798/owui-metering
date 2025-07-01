@@ -140,7 +140,7 @@ You as the admin are responsible to ensure that you follow the data privacy laws
 
 I am working on getting data retention and user deletion into OWUI-Metering to ensure you can comply to laws in that regard ASAP.
 
-## 🤝 Contributions Welcome!
+## Contributions Welcome!
 
 OWUI-Metering is an open-source project, and I encourage community contributions! Here’s how you can help:
 
