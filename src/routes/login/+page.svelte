@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Alert, Button, Card, Heading, Input, Li, List, Modal } from 'flowbite-svelte';
+	import { Alert, Button, Heading, Input, Li, List, Modal } from 'flowbite-svelte';
 	let password = $state('');
 	let isLoading = $state(false);
 	let loginModalOpen = $state(false);

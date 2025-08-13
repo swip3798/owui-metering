@@ -9,7 +9,7 @@ export const getModelCostForUser = async (userId: string, from: Date, to: Date) 
     output_token: number;
   }>(
     sql<{
-      date: string;
+      model: string;
       cost: number;
       input_token: number;
       output_token: number;

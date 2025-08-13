@@ -2,10 +2,13 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 
+const BEARER_TOKEN = `Bearer ${process.env.API_KEY}`;
+
 export const handle: Handle = async ({ event, resolve }) => {
 	const authHeader = event.request.headers.get('Authorization');
 	if (
 		authHeader === process.env.API_KEY ||
+		authHeader === BEARER_TOKEN ||
 		event.url.pathname.startsWith('/login') ||
 		event.url.pathname.startsWith('/api/v1/login')
 	) {
