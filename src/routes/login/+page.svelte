@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { Alert, Button, Card, Heading, Input } from 'flowbite-svelte';
+	import { Alert, Button, Card, Heading, Input, Li, List, Modal } from 'flowbite-svelte';
 	let password = $state('');
 	let isLoading = $state(false);
+	let loginModalOpen = $state(false);
 	let error: String | null = $state(null);
 
 	import { goto, invalidateAll } from '$app/navigation';
@@ -57,8 +58,23 @@
 <svelte:head>
 	<title>Login - Open-WebMetering</title>
 </svelte:head>
-<Heading tag="h1" class="mb-4">Login</Heading>
-<Card class="p-4">
+<div class="grid grid-cols-2">
+	<div>
+		<Heading tag="h1" class="mb-4">Track, Bill, and Optimize Your AI Costs</Heading>
+		<List class="mb-4 list-disc dark:text-gray-300">
+			<Li>Real-time cost tracking per user via Open-WebUI plugin.</Li>
+			<Li>Dashboard for monitoring usage and costs.</Li>
+			<Li>PDF report generation for billing users.</Li>
+		</List>
+
+		<Button onclick={() => (loginModalOpen = true)}>Login</Button>
+	</div>
+	<div>
+		<img src="/icon.svg" class="m-y-auto me-3 h-full w-full object-contain" alt="Logo" />
+	</div>
+</div>
+<Modal bind:open={loginModalOpen} class="p-4 backdrop:blur-sm">
+	<Heading tag="h4" class="mb-4">Type in your password</Heading>
 	<form class="pico" onsubmit={onLogin}>
 		<fieldset class="flex flex-col gap-2">
 			<Input
@@ -77,4 +93,4 @@
 			<Button onclick={onLogin}>Login</Button>
 		</fieldset>
 	</form>
-</Card>
+</Modal>
