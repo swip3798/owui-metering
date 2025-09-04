@@ -1,7 +1,7 @@
 services:
   owui-metering:
     build: .
-    image: git.cschweigel.de/swip3798/owui-metering
+    image: swip3798/owui-metering
     container_name: owui-metering
     env_file: '.env'
     restart: unless-stopped
