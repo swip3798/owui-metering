@@ -46,7 +46,7 @@
 	</div>
 </Navbar>
 <header class="mb-8 flex justify-center gap-2"></header>
-<main class="mx-auto flex w-full grow flex-col items-center sm:w-xl lg:w-4xl xl:w-6xl">
+<main class="mx-auto flex w-full grow flex-col items-center sm:w-xl lg:w-4xl xl:w-7xl">
 	{@render children()}
 </main>
 <Footer class="m-2 bg-slate-300 !py-4 dark:bg-slate-700">

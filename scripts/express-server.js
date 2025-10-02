@@ -20,25 +20,39 @@ const checkOrLogEnvVar = (name, envVar, optional) => {
 	return true;
 };
 
+// This is legit a total nightmare. I'd love to have a better way of calling background routines, but Node.js is utter garbage.
+// Just this makes me consider rewriting this to rust.
 const setupBackgroundTasks = () => {
 	console.info('Starting retention background task...');
-	const interval = setInterval(async () => {
+	const retentionInterval = setInterval(async () => {
 		try {
 			const response = await fetch(`http://localhost:${port}/api/v1/retention/tick`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json', Authorization: process.env.API_KEY }
 			});
 
-			// Process response if needed
 			const result = await response.json();
 			console.log('Background task result:', result);
 		} catch (err) {
 			console.error('Background task failed:', err);
 		}
 	}, 3600000 * 12);
-	// Clean up on server shutdown
-	process.on('SIGTERM', () => clearInterval(interval));
-	process.on('SIGINT', () => clearInterval(interval));
+	process.on('SIGTERM', () => clearInterval(retentionInterval));
+	process.on('SIGINT', () => clearInterval(retentionInterval));
+	const generationInterval = setInterval(async () => {
+		try {
+			const response = await fetch(`http://localhost:${port}/api/v1/metering/tick`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json', Authorization: process.env.API_KEY }
+			});
+
+			await response.json();
+		} catch (err) {
+			console.error('Background task failed:', err);
+		}
+	}, 60000 * 10);
+	process.on('SIGTERM', () => clearInterval(generationInterval));
+	process.on('SIGINT', () => clearInterval(generationInterval));
 };
 
 console.info('Check presence of all required environment variables:');

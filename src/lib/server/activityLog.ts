@@ -20,6 +20,7 @@ type Activity = {
     reasoning_token: number | null;
     cost: number;
     cached_tokens: number | null;
+    provider: string | null;
   };
 }[];
 
@@ -68,6 +69,7 @@ export function buildActivityTableData(activity: Activity): {
   const columns = [
     { title: 'Timestamp' },
     { title: 'Model' },
+    { title: 'Provider' },
     { title: 'Tokens' },
     { title: 'User' },
     { title: 'Cost' }
@@ -76,8 +78,9 @@ export function buildActivityTableData(activity: Activity): {
     return [
       new Date(activity.activity.timestamp * 1000),
       activity.activity.model,
+      activity.activity.provider || '',
       makeTokenString(activity.activity),
-      activity.activity.user_id + '|' + (activity.user?.name ?? ''),
+      activity.activity.user_id + ' | ' + (activity.user?.name ?? ''),
       activity.activity.cost
     ];
   });

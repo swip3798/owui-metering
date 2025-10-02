@@ -18,7 +18,15 @@ export const activityTable = sqliteTable(
     completion_token: int().notNull(),
     reasoning_token: int(),
     cost: real().notNull(),
-    cached_tokens: int()
+    cached_tokens: int(),
+    provider: text(),
+    reason: text()
   },
   (table) => [index('timestamp_idx').on(table.timestamp)]
 );
+
+export const pendingGenerationsTable = sqliteTable('pending_generations', {
+  id: text().primaryKey().notNull(),
+  user_id: text().notNull(),
+  timestamp: int().notNull()
+});
