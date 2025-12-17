@@ -62,7 +62,9 @@ async function processMessage(message: opentelemetry.proto.trace.v1.TracesData):
               reasoning_token: null,
               cached_tokens: null,
               provider: null,
-              reason: null
+              reason: null,
+              chat_id: null,
+              source: 'otlp'
             };
             for (const attribute of span.attributes) {
               switch (attribute.key) {
@@ -95,7 +97,10 @@ async function processMessage(message: opentelemetry.proto.trace.v1.TracesData):
                   activity.reason = attribute.value?.stringValue ?? null;
                   break;
                 case 'openrouter.provider.slug':
-                  activity.reason = attribute.value?.stringValue ?? null;
+                  activity.provider = attribute.value?.stringValue ?? null;
+                  break;
+                case 'session.id':
+                  activity.chat_id = attribute.value?.stringValue ?? null;
                   break;
               }
             }

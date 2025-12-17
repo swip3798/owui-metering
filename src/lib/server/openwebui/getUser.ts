@@ -9,6 +9,10 @@ export async function getUser(userId: string): Promise<{
   role: string;
   id: string;
 } | null> {
+  if (!process.env.OPENWEBUI_ENDPOINT || process.env.OPENWEBUI_API_KEY) {
+    console.warn('Openwebui connection is not configured, endpoint or API key not set');
+    return null;
+  }
   let res = await fetch(`${process.env.OPENWEBUI_ENDPOINT!}/api/v1/users/${userId}`, {
     headers: {
       'Content-Type': 'application/json',

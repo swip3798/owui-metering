@@ -72,9 +72,9 @@
 				<Input type="text" id="role" placeholder="Role" bind:value={role} required disabled />
 			</div>
 			<div class="col-span-2 flex flex-row gap-2">
-				<Button onclick={onResetUser}>Soft Delete</Button>
+				<Button onclick={onResetUser}>Delete User Only</Button>
 				<Tooltip>Deletes only the user record, activities stay in database</Tooltip>
-				<Button onclick={onDelete}>Hard Delete</Button>
+				<Button onclick={onDelete}>Delete User and Activities</Button>
 				<Tooltip>Deletes user and their activities</Tooltip>
 			</div>
 		</div>

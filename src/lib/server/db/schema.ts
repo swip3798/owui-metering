@@ -4,7 +4,8 @@ export const usersTable = sqliteTable('users', {
   id: text().primaryKey().notNull(),
   name: text().notNull(),
   email: text().notNull(),
-  role: text().notNull()
+  role: text().notNull(),
+  source: text().notNull().default('record')
 });
 
 export const activityTable = sqliteTable(
@@ -20,7 +21,10 @@ export const activityTable = sqliteTable(
     cost: real().notNull(),
     cached_tokens: int(),
     provider: text(),
-    reason: text()
+    reason: text(),
+    request_duration: real(),
+    chat_id: text(),
+    source: text().default('owui')
   },
   (table) => [index('timestamp_idx').on(table.timestamp)]
 );
@@ -29,4 +33,12 @@ export const pendingGenerationsTable = sqliteTable('pending_generations', {
   id: text().primaryKey().notNull(),
   user_id: text().notNull(),
   timestamp: int().notNull()
+});
+
+export const pricingTable = sqliteTable('pricings', {
+  timestamp: int().primaryKey().notNull(),
+  provider: text().notNull(),
+  input_token_cost: real().notNull(),
+  reasoning_token_cost: real().notNull(),
+  output_token_cost: real().notNull()
 });

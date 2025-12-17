@@ -50,7 +50,7 @@
 			}
 			return data;
 		};
-		data.recentActivity.columns[3].render = (data: string, type: string) => {
+		data.recentActivity.columns[4].render = (data: string, type: string) => {
 			if (type === 'display') {
 				const [id, name] = data.split('|');
 				return `<a href="/metering/user/${id}" class="decoration-solid underline" target="_blank">${name}</a>`;

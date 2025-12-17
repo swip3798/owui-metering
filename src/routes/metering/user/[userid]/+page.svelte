@@ -14,10 +14,10 @@
 			}
 			return data;
 		};
-		data.columns[3].render = (data: string, type: string) => {
+		data.columns[4].render = (data: string, type: string) => {
 			if (type === 'display') {
 				const [id, name] = data.split('|');
-				return `<a href="/metering/user/${id}" class="decoration-solid underline" target="_blank">${name}</a>`;
+				return `<a href="/metering/user/${id}" class="decoration-solid underline" target="_blank">${name ? name : id}</a>`;
 			}
 			return data;
 		};

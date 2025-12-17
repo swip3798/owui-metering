@@ -14,6 +14,7 @@ type Activity = {
     id: string;
     timestamp: number;
     user_id: string;
+    chat_id: string | null;
     model: string;
     prompt_token: number;
     completion_token: number;
@@ -21,6 +22,7 @@ type Activity = {
     cost: number;
     cached_tokens: number | null;
     provider: string | null;
+    source: string | null;
   };
 }[];
 
@@ -72,6 +74,7 @@ export function buildActivityTableData(activity: Activity): {
     { title: 'Provider' },
     { title: 'Tokens' },
     { title: 'User' },
+    { title: 'Chat' },
     { title: 'Cost' }
   ];
   let rows = activity.map((activity) => {
@@ -80,7 +83,10 @@ export function buildActivityTableData(activity: Activity): {
       activity.activity.model,
       activity.activity.provider || '',
       makeTokenString(activity.activity),
-      activity.activity.user_id + ' | ' + (activity.user?.name ?? ''),
+      activity.activity.user_id + (activity.user?.name ? ' | ' + activity.user?.name : ''),
+      activity.activity.chat_id == 'nochatid' || activity.activity.chat_id == null
+        ? 'No Chat'
+        : activity.activity.chat_id,
       activity.activity.cost
     ];
   });

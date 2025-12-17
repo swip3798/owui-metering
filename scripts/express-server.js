@@ -39,20 +39,6 @@ const setupBackgroundTasks = () => {
 	}, 3600000 * 12);
 	process.on('SIGTERM', () => clearInterval(retentionInterval));
 	process.on('SIGINT', () => clearInterval(retentionInterval));
-	const generationInterval = setInterval(async () => {
-		try {
-			const response = await fetch(`http://localhost:${port}/api/v1/metering/tick`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json', Authorization: process.env.API_KEY }
-			});
-
-			await response.json();
-		} catch (err) {
-			console.error('Background task failed:', err);
-		}
-	}, 60000 * 10);
-	process.on('SIGTERM', () => clearInterval(generationInterval));
-	process.on('SIGINT', () => clearInterval(generationInterval));
 };
 
 console.info('Check presence of all required environment variables:');
