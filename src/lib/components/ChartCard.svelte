@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Card, Chart } from 'flowbite-svelte';
+	import { Card } from 'flowbite-svelte';
+	import { Chart } from '@flowbite-svelte-plugins/chart';
 	import type { ApexOptions } from 'apexcharts';
 	const {
 		series,
@@ -15,7 +16,7 @@
 		color?: string;
 	} = $props();
 	const type: 'area' = 'area';
-	const options: ApexOptions = {
+	const options: ApexOptions = $derived({
 		chart: {
 			height: '400px',
 			type,
@@ -95,7 +96,7 @@
 		yaxis: {
 			show: false
 		}
-	};
+	});
 </script>
 
 <Card class="w-full max-w-full p-1">

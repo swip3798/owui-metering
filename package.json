@@ -16,6 +16,7 @@
 		"test": "vitest"
 	},
 	"devDependencies": {
+		"@flowbite-svelte-plugins/chart": "^0.2.4",
 		"@sveltejs/adapter-node": "^5.2.12",
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
@@ -26,7 +27,7 @@
 		"@types/jsonwebtoken": "^9.0.9",
 		"drizzle-kit": "^0.31.1",
 		"flowbite": "^3.1.2",
-		"flowbite-svelte": "^1.6.4",
+		"flowbite-svelte": "^1.31.0",
 		"flowbite-svelte-icons": "^2.2.0",
 		"prettier": "^3.4.2",
 		"prettier-plugin-svelte": "^3.3.3",
